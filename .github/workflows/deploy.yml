@@ -1,1 +1,73 @@
+  name: 'Terraform'
 
+  on: [push, pull_request]
+
+  env: 
+  NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
+  NEW_RELIC_REGION: ${{vars.REGION}}
+  NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
+
+
+
+  jobs:
+    terraform:
+      name: 'Terraform'
+      runs-on: ubuntu-latest
+      env: prod
+
+      # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+      # Set the working directory to main for the config files
+
+      steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Install the preferred version of Terraform CLI 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.ROOT_PATH }}
+        
+
+      # Run a terraform plan for pull requests only
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color
+        working-directory: ${{ env.ROOT_PATH }}
+      
+      # Add a comment to pull requests with plan results
+      - name: add-plan-comment
+        id: comment
+        uses: actions/github-script@v3
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖${{ steps.validate.outputs.stdout }}
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+        
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`${process.env.PLAN}\`\`\`
+            
+            </details>
+            
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+              
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+        # On push to main, build or change infrastructure according to Terraform configuration files

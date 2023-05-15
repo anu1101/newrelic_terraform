@@ -1,7 +1,7 @@
 provider "newrelic" {
-  api_key = "REPLACE HERE"
-  account_id = "REPLACE HERE"
-  region = "REPLACE HERE"
+  api_key = " "
+  account_id = "3662768"
+  region = "EU"
 }
 
 resource "newrelic_dashboard" "tf_dashboard_as_code" {
