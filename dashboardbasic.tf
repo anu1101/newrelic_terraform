@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    newrelic = {
+      source  = "newrelic/newrelic"
+    }
+  }
+}
+
 provider "newrelic" {
   api_key = " "
   account_id = "3662768"
