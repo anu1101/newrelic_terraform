@@ -6,8 +6,8 @@ on:
 env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
-  NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}\
-  ROOT_PATH: ${{ GITHUB_WORKSPACE }}
+  NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
+  ROOT_PATH: ${GITHUB_WORKSPACE}
 jobs:
   terraform:
     name: Terraform
