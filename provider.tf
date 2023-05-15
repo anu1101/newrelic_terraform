@@ -10,6 +10,5 @@ terraform {
 
 provider "newrelic" {
   region = "EU" 
+  accountId = 3662768
 }
-
-variable "accountId" { type = string }

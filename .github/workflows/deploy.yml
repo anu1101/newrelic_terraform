@@ -19,7 +19,7 @@
       defaults:
         run:
           shell: bash
-          
+
       environment: prod
 
       # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -43,6 +43,7 @@
 
       # Run a terraform plan for pull requests only
       - name: Terraform Plan
+        env: ${{vars.NEW_RELIC_API_KEY}}
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
