@@ -5,12 +5,8 @@ terraform {
       source  = "newrelic/newrelic"
     }
   }
+}
 
-    graphql = {
-      source = "sullivtr/graphql"
-      version = "2.5.2" 
-    }
-  }
 
 provider "newrelic" {
   region = "EU" 
