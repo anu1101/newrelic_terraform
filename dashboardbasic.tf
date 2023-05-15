@@ -12,7 +12,7 @@ provider "newrelic" {
   region = "EU"
 }
 
-resource "newrelic_dashboard" "tf_dashboard_as_code" {
+resource "newrelic_one_dashboard" "tf_dashboard_as_code" {
   title = "Observability : Dashboards as Code (Simple)"
   editable = "read_only"
 
