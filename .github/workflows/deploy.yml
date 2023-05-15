@@ -43,10 +43,9 @@
 
       # Run a terraform plan for pull requests only
       - name: Terraform Plan
-        env: ${{vars.NEW_RELIC_API_KEY}}
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: terraform plan
         working-directory: ${{ env.ROOT_PATH }}
       
       # Add a comment to pull requests with plan results
