@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: plan-artifact
-          path: ${GITHUB_WORKSPACE}/plan.out
+          path: ${{ github.workspace }}/plan.out
 
       - name: Terraform - Show Plan in PR
         uses: actions/github-script@v6
