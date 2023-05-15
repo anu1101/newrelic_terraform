@@ -5,10 +5,10 @@
  
 
   env: 
-  NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
-  NEW_RELIC_REGION: ${{vars.REGION}}
-  NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}\
-  ROOT_PATH: '${{github.workspace}}'
+    NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
+    NEW_RELIC_REGION: ${{vars.REGION}}
+    NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}\
+    ROOT_PATH: '${{github.workspace}}'
 
 
 
@@ -35,7 +35,7 @@
         uses: hashicorp/setup-terraform@v2
         with:
         terraform_version: 1.0.10
-        
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         id: init
