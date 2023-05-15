@@ -41,7 +41,7 @@ jobs:
           terraform show -no-color plan.tmp >${GITHUB_WORKSPACE}/plan.out
           
       - name: Create artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: plan-artifact
           path: ${{ github.workspace }}/plan.out
