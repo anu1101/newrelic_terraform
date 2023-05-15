@@ -2,9 +2,7 @@
 
   on: [push, pull_request]
 
-  defaults:
-  run:
-    shell: bash
+ 
 
   env: 
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
@@ -18,6 +16,10 @@
     terraform:
       name: 'Terraform'
       runs-on: ubuntu-latest
+      defaults:
+        run:
+          shell: bash
+          working-directory: ./main
       env: prod
 
       # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -31,7 +33,9 @@
       # Install the preferred version of Terraform CLI 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-
+        with:
+        terraform_version: 1.0.10
+        
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         id: init
