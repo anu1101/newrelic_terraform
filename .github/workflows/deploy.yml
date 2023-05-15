@@ -38,13 +38,13 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           terraform plan -out=plan.tmp
-          terraform show -no-color plan.tmp >${github.workspace}/plan.out
+          terraform show -no-color plan.tmp >${GITHUB_WORKSPACE}/plan.out
           
       - name: Create artifact
-        uses: actions/download-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: plan.out
-          path: ${{ github.workspace }}
+          path: ${GITHUB_WORKSPACE}/plan.out
 
       - name: Terraform - Show Plan in PR
         uses: actions/github-script@v6
