@@ -7,7 +7,7 @@ env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
   NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
-  ROOT_PATH: ${github.workspace}
+  ROOT_PATH: ${{github.workspace}}
 jobs:
   terraform:
     name: Terraform
@@ -38,13 +38,13 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           terraform plan -out=plan.tmp
-          terraform show -no-color plan.tmp >${GITHUB_WORKSPACE}/plan.out
+          terraform show -no-color plan.tmp >${{github.workspace}}/plan.out
           
       - name: Create artifact
         uses: actions/upload-artifact@v3
         with:
           name: plan.out
-          path: ${GITHUB_WORKSPACE}/plan.tmp
+          path: ${{github.workspace}}/plan.out
 
       - name: Terraform - Show Plan in PR
         uses: actions/github-script@v6
