@@ -28,7 +28,6 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
-          location: ${{github.workspace}}
 
 
       - name: Terraform Init
