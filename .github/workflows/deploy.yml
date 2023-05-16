@@ -7,7 +7,7 @@ env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
   NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
-  WORKING_DIRECTORY: ${{github.workspace}}/dashboard
+  WORKING_DIRECTORY: '${{github.workspace}}/dashboard'
 jobs:
   terraform:
     name: Terraform
@@ -26,6 +26,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
+          statefile_location: '${{github.workspace}}/dashboard'
 
 
       - name: Setup Terraform
