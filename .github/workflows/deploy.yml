@@ -23,13 +23,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Download Terraform state
-        uses: devgioele/terraform-state-artifact@v4
-        with:
-          passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
-          download_upload: download
-          statefile_location: ./dashboard/terraform.tfstate
-
       - name: Terraform Init
         id: init
         run: terraform init
