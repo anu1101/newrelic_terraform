@@ -28,6 +28,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
+          statefile_location: ./dashboard/terraform.tfstate
 
       - name: Terraform Init
         id: init
@@ -122,9 +123,11 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
-       
+        working-directory: ${{ env.ROOT_PATH }}
+
       - name: Upload Terraform state
         uses: devgioele/terraform-state-artifact@v4
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
+          statefile_location: ./dashboard/terraform.tfstate
