@@ -23,6 +23,14 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Download Terraform state
+        uses: devgioele/terraform-state-artifact@v4
+        with:
+          passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
+          download_upload: download
+          statefile_location: ${{github.workspace}}
+
+
       - name: Terraform Init
         id: init
         run: terraform init
@@ -115,3 +123,10 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
+
+      - name: Upload Terraform state
+        uses: devgioele/terraform-state-artifact@v4
+        with:
+          passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
+          download_upload: upload
+          statefile_location: ${{github.workspace}}
