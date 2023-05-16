@@ -28,7 +28,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
-          statefile_location: ${{github.workspace}}
+          statefile_location: ${{github.workspace}}/dashboard
 
 
 
@@ -132,4 +132,4 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
-          statefile_location: ${{github.workspace}}
+          statefile_location: ${{github.workspace}}/dashboard
