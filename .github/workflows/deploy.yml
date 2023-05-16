@@ -1,1 +1,117 @@
+---
+name: Terraform
+on:
+  - push
+  - pull_request
+env:
+  NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
+  NEW_RELIC_REGION: ${{vars.REGION}}
+  NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
+  ROOT_PATH: ${{github.workspace}}
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ${{ env.ROOT_PATH }}
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+        working-directory: ${{ env.ROOT_PATH }}
+
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform plan -out=plan.tmp
+          terraform show -no-color plan.tmp >${{github.workspace}}/plan.out
+          
+      - name: Create artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plan.out
+          path: ${{github.workspace}}/plan.out
+
+      - name: Terraform - Show Plan in PR
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: >
+            const run_url = process.env.GITHUB_SERVER_URL + '/' +
+            process.env.GITHUB_REPOSITORY + '/actions/runs/' +
+            process.env.GITHUB_RUN_ID
+
+            const run_link = '<a href="' + run_url + '">Actions</a>.'
+
+            const fs = require('fs')
+
+            const plan_file = fs.readFileSync('plan.out', 'utf8')
+
+            const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
+
+            const truncated_message = plan_file.length > 65000 ? "Output is too long and was truncated. You can read full Plan in " + run_link + "<br /><br />" : ""
+
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+
+            <details><summary>Validation Output</summary>
+
+
+            \`\`\`\n
+
+            ${{ steps.validate.outputs.stdout }}
+
+            \`\`\`
+
+
+            </details>
+
+
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+
+            <details><summary>Show Plan</summary>
+
+
+            \`\`\`\n
+
+            ${plan}
+
+            \`\`\`
+
+
+            </details>
+
+            ${truncated_message}
+
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
+              
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
