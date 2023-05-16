@@ -132,3 +132,4 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
+          statefile_location: '/dashboard'
