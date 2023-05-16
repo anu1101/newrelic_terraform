@@ -26,6 +26,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
+          statefile_location: '/dashboard'
 
 
       - name: Setup Terraform
