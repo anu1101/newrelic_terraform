@@ -7,7 +7,7 @@ env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
   NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
-  ROOT_PATH: './dashboard'
+  ROOT_PATH: '${{github.workspace}}/dashboard'
 jobs:
   terraform:
     name: Terraform
@@ -25,7 +25,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
-          statefile_location: './dashboard/terraform'
+          statefile_location: ${{ env.ROOT_PATH }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -130,4 +130,4 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
-          statefile_location: './dashboard/terraform'
+          statefile_location: ${{ env.ROOT_PATH }}

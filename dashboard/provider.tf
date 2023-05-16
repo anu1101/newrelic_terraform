@@ -9,6 +9,6 @@ terraform {
 
 
 provider "newrelic" {
-  region = "EU" 
   account_id = 3662768
+  region = "EU"
 }
