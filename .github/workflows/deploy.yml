@@ -28,7 +28,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
-          statefile_location: ${{ env.ROOT_PATH }}
+
 
 
       - name: Terraform Init
@@ -131,4 +131,3 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
-          statefile_location: ${{ env.ROOT_PATH }}
