@@ -25,7 +25,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
-          statefile_location: ${{ env.ROOT_PATH }}
+          statefile_location: './dashboard/terraform'
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -130,4 +130,4 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
-          statefile_location: ${{ env.ROOT_PATH }}
+          statefile_location: './dashboard/terraform'
