@@ -7,7 +7,7 @@ env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
   NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
-  ROOT_PATH: ${{github.workspace}}
+  ROOT_PATH: './dashboard'
 jobs:
   terraform:
     name: Terraform
@@ -28,6 +28,7 @@ jobs:
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
+          location: ${{github.workspace}}
 
 
       - name: Terraform Init
@@ -46,6 +47,7 @@ jobs:
         run: |
           terraform plan -out=plan.tmp
           terraform show -no-color plan.tmp >${{github.workspace}}/plan.out
+        working-directory: ${{ env.ROOT_PATH }}
           
       - name: Create artifact
         uses: actions/upload-artifact@v3
@@ -122,6 +124,7 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
+        working-directory: ${{ env.ROOT_PATH }}
 
       - name: Upload Terraform state
         uses: devgioele/terraform-state-artifact@v4
