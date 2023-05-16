@@ -1,8 +1,13 @@
 ---
 name: Terraform
 on:
-  - push
-  - pull_request
+  push:
+    branches: feature_test
+  pull_request:
+    branches: main
+  
+  workflow_dispatch:
+
 env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
