@@ -7,7 +7,7 @@ env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
   NEW_RELIC_ACCOUNT_ID: ${{vars.ACCOUNT_ID}}
-  ROOT_PATH: './dashboard'
+  ROOT_PATH: '${{github.workspace}}/dashboard'
 jobs:
   terraform:
     name: Terraform
@@ -20,14 +20,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-
       - name: Download Terraform state
         uses: devgioele/terraform-state-artifact@v4
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: download
+
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         id: init
@@ -122,9 +123,11 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
-       
+        working-directory: ${{ env.ROOT_PATH }}
+
       - name: Upload Terraform state
         uses: devgioele/terraform-state-artifact@v4
         with:
           passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
           download_upload: upload
+          statefile_location: ${{ env.ROOT_PATH }}
