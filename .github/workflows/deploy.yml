@@ -3,6 +3,9 @@ name: Terraform
 on:
   - push
   - pull_request
+
+  workflow_dispatch:
+  
 env:
   NEW_RELIC_API_KEY: ${{vars.NEW_RELIC_API_KEY}}
   NEW_RELIC_REGION: ${{vars.REGION}}
