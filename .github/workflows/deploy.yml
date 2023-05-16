@@ -20,11 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Download Terraform state
-        uses: devgioele/terraform-state-artifact@v4
+      - name: Download State File
+        uses: actions/download-artifact@v2
         with:
-          passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
-          download_upload: download
+          name: terraform-state
 
 
       - name: Setup Terraform
@@ -125,9 +124,8 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ${{ env.ROOT_PATH }}
 
-      - name: Upload Terraform state
-        uses: devgioele/terraform-state-artifact@v4
+      - name: Upload State File
+        uses: actions/upload-artifact@v2
         with:
-          passphrase: ${{ secrets.TF_STATE_PASSPHRASE }}
-          download_upload: upload
-          statefile_location: ${{ env.ROOT_PATH }}
+          name: terraform-state
+          path: ${{github.workspace}}/dashboard/terraform.tfstate
